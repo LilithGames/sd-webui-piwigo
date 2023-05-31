@@ -67,7 +67,7 @@ async def upload_images(processed):
                 data = output.getvalue()
                 uploaded_image = await client.pwg.images.addSimple.async_call(image=data, comment=desc, tags=",".join(tags))
                 image_id = uploaded_image.get("image_id")
-                await client.pwg.images.setInfo.async_call(image_id=image_id, categories="1;")
+                await client.pwg.images.setInfo.async_call(image_id=image_id, categories=shared.opts.piwigo_category_ids)
                 print("uploaded: ", desc, tags)
     except Exception as e:
         logging.exception(f"An exception occurred while upload_images: {str(e)}")
@@ -85,14 +85,17 @@ class PiwigoScript(scripts.Script):
             return []
 
         def postprocess(self, p, processed, *args):
-            asyncio.run_coroutine_threadsafe(upload_images(processed), background)
-            print()
+            if shared.opts.piwigo_enable:
+                asyncio.run_coroutine_threadsafe(upload_images(processed), background)
+                print()
 
 
 def on_ui_settings():
     section = ('piwigo', "Piwigo")
+    shared.opts.add_option("piwigo_enable", shared.OptionInfo(False, "enable", gr.Checkbox, {}, section=section))
     shared.opts.add_option("piwigo_host", shared.OptionInfo("https://piwigohost.com", "base url", gr.Textbox, {}, section=section))
     shared.opts.add_option("piwigo_username", shared.OptionInfo("stable-diffusion", "username", gr.Textbox, {}, section=section))
     shared.opts.add_option("piwigo_password", shared.OptionInfo("", "password", gr.Textbox, {}, section=section))
+    shared.opts.add_option("piwigo_category_ids", shared.OptionInfo("1;", "album ids", gr.Textbox, {}, section=section))
 
 script_callbacks.on_ui_settings(on_ui_settings)
