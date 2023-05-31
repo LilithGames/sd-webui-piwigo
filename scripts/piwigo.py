@@ -70,7 +70,7 @@ async def upload_images(processed):
                 await client.pwg.images.setInfo.async_call(image_id=image_id, categories=shared.opts.piwigo_category_ids)
                 print("uploaded: ", desc, tags)
     except Exception as e:
-        logging.exception(f"An exception occurred while upload_images: {str(e)}")
+        logging.exception(f"An exception occurred while upload_images: {str(e)}, processd: {processed.images} {processed.infotexts} {processed.prompt}")
 
 
 class PiwigoScript(scripts.Script):
