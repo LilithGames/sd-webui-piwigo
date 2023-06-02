@@ -56,7 +56,6 @@ async def upload_images(processed):
         if len(images) > 1:
             # skip grid image
             images = images[1:]
-            infotexts = infotexts[1:]
         for i in range(0, len(images)):
             image = images[i]
             infotext = infotexts[i]
