@@ -4,6 +4,7 @@ import gradio as gr
 import os
 import logging
 import threading
+import time
 
 import modules.scripts as scripts
 from modules import shared
