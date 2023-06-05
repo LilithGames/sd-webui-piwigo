@@ -27,10 +27,13 @@ background = new_background_event_loop()
 
 def singleton(func):
     instance = None
+    last_executed = 0
     async def wrapper(*args, **kwargs):
-        nonlocal instance
-        if instance is None:
+        nonlocal instance, last_executed
+        current_time = time.time()
+        if instance is None or current_time - last_executed >= 3600:
             instance = await func(*args, **kwargs)
+            last_executed = current_time
         return instance
 
     return wrapper
