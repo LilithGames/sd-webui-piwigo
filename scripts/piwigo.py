@@ -57,9 +57,10 @@ async def upload_images(processed):
         if not client:
             logging.warning("get piwigo client failed, skip upload")
             return
-        if len(images) > 1:
+        extra = len(images) - len(infotexts)
+        if extra > 0:
             # skip grid image
-            images = images[1:]
+            images = images[extra:]
         for i in range(0, len(images)):
             image = images[i]
             infotext = infotexts[i]
